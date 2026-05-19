@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>День у Глухого Озера</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #EAF4EE;
+    --dark: #1C4F38;
+    --mid: #2D6B50;
+    --soft: #4A7E65;
+    --pale: #7DB89A;
+    --verypale: #A8D4BF;
+    --circle1: #D6EDE3;
+    --circle2: #C2E1D3;
+    --circle3: #9DCFBB;
+    --leaf: #85C4A3;
+    --water: #C5E4D6;
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --sans: 'Jost', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--dark);
+    font-family: var(--sans);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ---- HERO ---- */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 24px 80px;
+    overflow: hidden;
+  }
+
+  /* Animated background circles */
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .orb-1 {
+    width: 340px; height: 340px;
+    background: var(--circle1);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -58%);
+    animation: breathe 7s ease-in-out infinite;
+  }
+  .orb-2 {
+    width: 260px; height: 260px;
+    background: var(--circle2);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -58%);
+    animation: breathe 7s ease-in-out infinite 0.4s;
+  }
+  .orb-3 {
+    width: 185px; height: 185px;
+    background: var(--circle3);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -58%);
+    animation: breathe 7s ease-in-out infinite 0.8s;
+  }
+  @keyframes breathe {
+    0%, 100% { transform: translate(-50%, -58%) scale(1); }
+    50% { transform: translate(-50%, -58%) scale(1.04); }
+  }
+
+  /* SVG botanical */
+  .botanical {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    opacity: 0.55;
+  }
+
+  /* Water waves bottom */
+  .waves {
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%;
+    pointer-events: none;
+  }
+
+  /* Hero content */
+  .hero-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  .eyebrow {
+    font-family: var(--sans);
+    font-weight: 300;
+    font-size: 11px;
+    letter-spacing: 5px;
+    color: var(--soft);
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 0.3s;
+  }
+
+  .title-main {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(62px, 12vw, 96px);
+    line-height: 0.92;
+    color: var(--dark);
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 0.5s;
+  }
+
+  .title-sub {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(34px, 6vw, 54px);
+    color: var(--mid);
+    margin-top: 6px;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 0.7s;
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 22px 0 20px;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 0.9s;
+  }
+  .divider-line {
+    width: 80px;
+    height: 0.5px;
+    background: var(--pale);
+  }
+  .divider-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--pale);
+  }
+
+  .tagline {
+    font-family: var(--sans);
+    font-weight: 300;
+    font-size: 11px;
+    letter-spacing: 3.5px;
+    color: var(--soft);
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 1s;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 1.6s;
+    cursor: pointer;
+  }
+  .scroll-hint span {
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--pale);
+    text-transform: uppercase;
+  }
+  .scroll-hint .arrow {
+    width: 1px;
+    height: 30px;
+    background: var(--pale);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.4; transform: scaleY(0.7); }
+    50% { opacity: 1; transform: scaleY(1); }
+  }
+
+  /* ---- SECTIONS ---- */
+  section {
+    padding: 80px 24px;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  /* Activities */
+  .activities {
+    text-align: center;
+  }
+  .activities h2 {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-style: italic;
+    font-size: 38px;
+    color: var(--dark);
+    margin-bottom: 44px;
+  }
+  .activity-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  @media (max-width: 560px) {
+    .activity-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  .activity-card {
+    background: white;
+    border: 0.5px solid var(--verypale);
+    border-radius: 16px;
+    padding: 28px 16px 22px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: default;
+  }
+  .activity-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(28, 79, 56, 0.08);
+  }
+  .activity-icon {
+    font-size: 28px;
+    line-height: 1;
+  }
+  .activity-name {
+    font-family: var(--serif);
+    font-size: 17px;
+    color: var(--dark);
+    font-weight: 400;
+  }
+  .activity-desc {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--pale);
+    font-weight: 300;
+    line-height: 1.5;
+  }
+
+  /* Separator leaf */
+  .sep {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 0 24px;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .sep-line {
+    flex: 1;
+    height: 0.5px;
+    background: var(--verypale);
+  }
+  .sep-leaf {
+    color: var(--leaf);
+    font-size: 18px;
+  }
+
+  /* Info block */
+  .info {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    align-items: center;
+    text-align: center;
+  }
+
+  .info-date-box {
+    background: var(--circle1);
+    border-radius: 20px;
+    padding: 36px 52px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    max-width: 340px;
+  }
+  .info-label {
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--soft);
+    text-transform: uppercase;
+    font-weight: 300;
+  }
+  .info-time {
+    font-family: var(--serif);
+    font-size: 72px;
+    color: var(--dark);
+    font-weight: 400;
+    line-height: 1;
+  }
+  .info-free {
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--pale);
+    text-transform: uppercase;
+    font-weight: 300;
+  }
+
+  .info-quote {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 22px;
+    color: var(--mid);
+    line-height: 1.5;
+  }
+
+  .info-text {
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--soft);
+    line-height: 1.8;
+  }
+
+  /* Location */
+  .location {
+    text-align: center;
+  }
+  .location h2 {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-style: italic;
+    font-size: 38px;
+    color: var(--dark);
+    margin-bottom: 10px;
+  }
+  .location-place {
+    font-family: var(--sans);
+    font-weight: 300;
+    font-size: 14px;
+    letter-spacing: 1.5px;
+    color: var(--soft);
+    margin-bottom: 32px;
+  }
+  .map-placeholder {
+    background: var(--circle2);
+    border-radius: 20px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    border: 0.5px solid var(--verypale);
+  }
+  .map-placeholder span { font-size: 32px; }
+  .map-placeholder p {
+    font-family: var(--sans);
+    font-size: 13px;
+    color: var(--soft);
+    font-weight: 300;
+  }
+  .map-link {
+    display: inline-block;
+    margin-top: 20px;
+    font-family: var(--sans);
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--mid);
+    text-decoration: none;
+    border-bottom: 0.5px solid var(--pale);
+    padding-bottom: 2px;
+    font-weight: 300;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .map-link:hover { color: var(--dark); border-color: var(--mid); }
+
+  /* Contact */
+  .contact {
+    text-align: center;
+  }
+  .contact h2 {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 300;
+    font-size: 38px;
+    color: var(--dark);
+    margin-bottom: 32px;
+  }
+  .contact-card {
+    background: white;
+    border: 0.5px solid var(--verypale);
+    border-radius: 20px;
+    padding: 36px 40px;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  .contact-name {
+    font-family: var(--serif);
+    font-size: 28px;
+    color: var(--dark);
+    font-weight: 400;
+  }
+  .contact-phone {
+    font-family: var(--sans);
+    font-size: 22px;
+    color: var(--mid);
+    font-weight: 300;
+    text-decoration: none;
+    letter-spacing: 1px;
+    transition: color 0.2s;
+  }
+  .contact-phone:hover { color: var(--dark); }
+  .contact-note {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--pale);
+    font-weight: 300;
+    margin-top: 6px;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 40px 24px 60px;
+  }
+  .footer-tagline {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 20px;
+    color: var(--pale);
+  }
+  .footer-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  .footer-dots span {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--circle3);
+    display: inline-block;
+  }
+  .footer-dots span:nth-child(2) { width: 7px; height: 7px; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <!-- Orbs -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <!-- Botanical SVG -->
+  <svg class="botanical" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
+    <!-- Left branch -->
+    <g stroke="#5A9A7F" stroke-width="0.8" fill="none">
+      <line x1="40" y1="560" x2="200" y2="260"/>
+      <line x1="200" y1="260" x2="175" y2="200"/>
+      <line x1="200" y1="260" x2="240" y2="185"/>
+      <line x1="200" y1="260" x2="265" y2="255"/>
+      <line x1="40" y1="560" x2="95" y2="430"/>
+      <line x1="95" y1="430" x2="65" y2="375"/>
+      <line x1="95" y1="430" x2="140" y2="400"/>
+    </g>
+    <g fill="#85C4A3" opacity="0.65">
+      <ellipse cx="173" cy="193" rx="14" ry="6" transform="rotate(-35 173 193)"/>
+      <ellipse cx="244" cy="178" rx="13" ry="5" transform="rotate(15 244 178)"/>
+      <ellipse cx="269" cy="253" rx="12" ry="5" transform="rotate(30 269 253)"/>
+      <ellipse cx="63" cy="370" rx="11" ry="5" transform="rotate(-20 63 370)"/>
+      <ellipse cx="144" cy="397" rx="12" ry="5" transform="rotate(10 144 397)"/>
+    </g>
+    <!-- Right branch -->
+    <g stroke="#5A9A7F" stroke-width="0.8" fill="none">
+      <line x1="760" y1="530" x2="600" y2="245"/>
+      <line x1="600" y1="245" x2="628" y2="180"/>
+      <line x1="600" y1="245" x2="562" y2="185"/>
+      <line x1="600" y1="245" x2="535" y2="248"/>
+      <line x1="760" y1="530" x2="710" y2="405"/>
+      <line x1="710" y1="405" x2="738" y2="350"/>
+      <line x1="710" y1="405" x2="672" y2="382"/>
+    </g>
+    <g fill="#85C4A3" opacity="0.65">
+      <ellipse cx="630" cy="174" rx="13" ry="5" transform="rotate(35 630 174)"/>
+      <ellipse cx="559" cy="180" rx="13" ry="5" transform="rotate(-15 559 180)"/>
+      <ellipse cx="532" cy="246" rx="12" ry="5" transform="rotate(-30 532 246)"/>
+      <ellipse cx="741" cy="346" rx="11" ry="5" transform="rotate(20 741 346)"/>
+      <ellipse cx="669" cy="379" rx="12" ry="5" transform="rotate(-10 669 379)"/>
+    </g>
+    <!-- Small scattered leaves -->
+    <g fill="#9DCFBB" opacity="0.4">
+      <ellipse cx="350" cy="90" rx="8" ry="3" transform="rotate(20 350 90)"/>
+      <ellipse cx="420" cy="710" rx="9" ry="4" transform="rotate(-15 420 710)"/>
+      <ellipse cx="100" cy="700" rx="7" ry="3" transform="rotate(10 100 700)"/>
+      <ellipse cx="680" cy="660" rx="8" ry="3" transform="rotate(-25 680 660)"/>
+    </g>
+  </svg>
+
+  <!-- Waves -->
+  <svg class="waves" viewBox="0 0 1200 120" preserveAspectRatio="none" style="height:80px;">
+    <path d="M0,60 C200,100 400,20 600,60 C800,100 1000,20 1200,60 L1200,120 L0,120 Z" fill="#C2E1D3" opacity="0.3"/>
+    <path d="M0,75 C300,110 500,40 700,75 C900,110 1100,40 1200,75 L1200,120 L0,120 Z" fill="#A8D4BF" opacity="0.25"/>
+  </svg>
+
+  <!-- Content -->
+  <div class="hero-content">
+    <p class="eyebrow">приглашаем на</p>
+    <h1 class="title-main">День</h1>
+    <p class="title-sub">у Глухого Озера</p>
+    <div class="divider">
+      <div class="divider-line"></div>
+      <div class="divider-dot"></div>
+      <div class="divider-line"></div>
+    </div>
+    <p class="tagline">свободный мини-фестиваль · суббота · 11:00</p>
+  </div>
+
+  <div class="scroll-hint" onclick="document.getElementById('activities').scrollIntoView({behavior:'smooth'})">
+    <span>далее</span>
+    <div class="arrow"></div>
+  </div>
+</section>
+
+<!-- ACTIVITIES -->
+<section id="activities" class="activities">
+  <h2>что будет</h2>
+  <div class="activity-grid">
+    <div class="activity-card">
+      <div class="activity-icon">🍵</div>
+      <div class="activity-name">Чаепитие</div>
+      <div class="activity-desc">тёплый чай и хорошая компания</div>
+    </div>
+    <div class="activity-card">
+      <div class="activity-icon">🌿</div>
+      <div class="activity-name">Йога</div>
+      <div class="activity-desc">у воды, на свежем воздухе</div>
+    </div>
+    <div class="activity-card">
+      <div class="activity-icon">🤲</div>
+      <div class="activity-name">Массаж</div>
+      <div class="activity-desc">расслабление и забота о теле</div>
+    </div>
+    <div class="activity-card">
+      <div class="activity-icon">🪨</div>
+      <div class="activity-name">Гвоздестояние</div>
+      <div class="activity-desc">практика осознанности</div>
+    </div>
+    <div class="activity-card">
+      <div class="activity-icon">💧</div>
+      <div class="activity-name">Купание</div>
+      <div class="activity-desc">в живом лесном озере</div>
+    </div>
+    <div class="activity-card">
+      <div class="activity-icon">🤍</div>
+      <div class="activity-name">Общение</div>
+      <div class="activity-desc">нетворкинг, обнимашки, разговоры</div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"><div class="sep-line"></div><span class="sep-leaf">🌿</span><div class="sep-line"></div></div>
+
+<!-- INFO -->
+<section class="info">
+  <div class="info-date-box">
+    <span class="info-label">суббота</span>
+    <span class="info-time">11:00</span>
+    <span class="info-free">вход свободный · бесплатно</span>
+  </div>
+
+  <p class="info-quote">бесплатно и от души</p>
+
+  <p class="info-text">
+    Никакой программы. Никаких обязательств.<br>
+    Просто хорошие люди, природа и тишина.<br>
+    Приходи таким, какой ты есть.
+  </p>
+</section>
+
+<div class="sep"><div class="sep-line"></div><span class="sep-leaf">🌱</span><div class="sep-line"></div></div>
+
+<!-- LOCATION -->
+<section class="location">
+  <h2>как добраться</h2>
+  <p class="location-place">📍 Глухое Озеро — Осиновая Роща, Ленинградская область</p>
+  <div class="map-placeholder">
+    <span>🗺️</span>
+    <p>Глухое Озеро, Осиновая Роща</p>
+  </div>
+  <a class="map-link" href="https://yandex.ru/maps/?text=Глухое+Озеро+Осиновая+Роща" target="_blank">открыть на Яндекс Картах →</a>
+</section>
+
+<div class="sep"><div class="sep-line"></div><span class="sep-leaf">🍃</span><div class="sep-line"></div></div>
+
+<!-- CONTACT -->
+<section class="contact">
+  <h2>связаться</h2>
+  <div class="contact-card">
+    <span class="contact-name">Павел</span>
+    <a class="contact-phone" href="tel:+79939679379">+7 993 967-93-79</a>
+    <p class="contact-note">пишите или звоните — ответим с радостью 🌿</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p class="footer-tagline">приходи — будет хорошо</p>
+  <div class="footer-dots">
+    <span></span><span></span><span></span>
+  </div>
+</footer>
+
+</body>
+</html>
