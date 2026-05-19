@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YON — Whitepaper v2.∞ | Дух Жизни</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;700;800&family=Noto+Serif+JP:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void: #04050a;
+  --soil: #0d0e08;
+  --paper: #f0ede6;
+  --moss: #7fff5f;
+  --sun: #ffe94a;
+  --fire: #ff5c1a;
+  --sky: #00e5ff;
+  --myc: #c77dff;  /* mycelium purple */
+  --dew: #a8ffdd;
+  --rust: #ff9b54;
+  --ink: rgba(240,237,230,0.7);
+  --ink-dim: rgba(240,237,230,0.35);
+  --ink-ghost: rgba(240,237,230,0.12);
+}
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+::selection{background:var(--moss);color:var(--void);}
+
+body {
+  background: var(--void);
+  color: var(--paper);
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 300;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ── CUSTOM CURSOR ── */
+#cur {
+  position: fixed; z-index: 9999; pointer-events: none;
+  width: 10px; height: 10px;
+  background: var(--moss);
+  border-radius: 50%;
+  box-shadow: 0 0 16px var(--moss);
+  transition: transform 0.1s ease;
+  mix-blend-mode: screen;
+}
+#cur-ring {
+  position: fixed; z-index: 9998; pointer-events: none;
+  width: 32px; height: 32px;
+  border: 1px solid rgba(127,255,95,0.3);
+  border-radius: 50%;
+  transition: left 0.12s ease, top 0.12s ease, transform 0.2s ease;
+}
+
+/* ── LIVING CANVAS ── */
+#life-canvas {
+  position: fixed; top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0; opacity: 0.12;
+  pointer-events: none;
+}
+
+/* ── GRAIN OVERLAY ── */
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.09'/%3E%3C/svg%3E");
+  z-index: 1; pointer-events: none; opacity: 0.5;
+}
+
+/* ── LAYOUT ── */
+main { position: relative; z-index: 5; }
+
+.wrap {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 48px;
+}
+
+@media(max-width:640px){ .wrap{padding:0 24px;} }
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 20px 48px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: linear-gradient(to bottom, rgba(4,5,10,0.9), transparent);
+  backdrop-filter: blur(2px);
+}
+.nav-logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800; font-size: 18px;
+  letter-spacing: 0.15em;
+}
+.nav-logo .y{color:var(--moss);}
+.nav-logo .o{color:var(--sun);}
+.nav-logo .n{color:var(--sky);}
+
+.nav-links {
+  display: flex; gap: 28px;
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; letter-spacing: 0.3em;
+  color: var(--ink-dim);
+}
+.nav-links a { color: inherit; text-decoration: none; transition: color 0.2s; }
+.nav-links a:hover { color: var(--moss); }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 48px 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-earth {
+  position: absolute;
+  bottom: -20%; right: -10%;
+  width: 70vw; height: 70vw;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 40%,
+    rgba(127,255,95,0.08) 0%,
+    rgba(7,255,95,0.04) 30%,
+    rgba(0,229,255,0.02) 60%,
+    transparent 80%
+  );
+  border: 1px solid rgba(127,255,95,0.06);
+  animation: earthPulse 8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes earthPulse {
+  0%,100%{transform:scale(1) rotate(0deg);}
+  50%{transform:scale(1.02) rotate(1deg);}
+}
+
+.hero-eyebrow {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; letter-spacing: 0.5em;
+  color: var(--moss); margin-bottom: 24px;
+  opacity: 0; animation: riseUp 1s 0.3s forwards;
+}
+
+.hero-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(72px, 15vw, 140px);
+  line-height: 0.88;
+  letter-spacing: -0.03em;
+  margin-bottom: 32px;
+  opacity: 0; animation: riseUp 1s 0.5s forwards;
+}
+.hero-title .y{color:var(--moss);}
+.hero-title .o{
+  color:transparent;
+  -webkit-text-stroke: 1.5px var(--sun);
+  display:inline-block;
+  animation: wobble 6s ease-in-out infinite;
+}
+.hero-title .n{color:var(--sky);}
+
+@keyframes wobble {
+  0%,100%{transform:skewX(0);}
+  33%{transform:skewX(-4deg);}
+  66%{transform:skewX(4deg);}
+}
+
+.hero-claim {
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(15px,2.5vw,22px);
+  font-weight: 200;
+  line-height: 1.7;
+  color: var(--ink);
+  max-width: 560px;
+  margin-bottom: 48px;
+  opacity: 0; animation: riseUp 1s 0.7s forwards;
+}
+
+.hero-badges {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  opacity: 0; animation: riseUp 1s 0.9s forwards;
+}
+.badge {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; letter-spacing: 0.2em;
+  padding: 6px 14px;
+  border: 1px solid;
+  text-transform: uppercase;
+}
+.badge-g{border-color:rgba(127,255,95,0.4);color:var(--moss);}
+.badge-y{border-color:rgba(255,233,74,0.4);color:var(--sun);}
+.badge-s{border-color:rgba(0,229,255,0.4);color:var(--sky);}
+.badge-p{border-color:rgba(199,125,255,0.4);color:var(--myc);}
+.badge-r{border-color:rgba(255,92,26,0.4);color:var(--fire);}
+
+.hero-scroll {
+  position: absolute; bottom: 40px; right: 48px;
+  font-family: 'Space Mono', monospace;
+  font-size: 8px; letter-spacing: 0.4em;
+  color: var(--ink-ghost);
+  writing-mode: vertical-rl;
+  opacity: 0; animation: riseUp 1s 1.2s forwards;
+}
+
+@keyframes riseUp {
+  from{opacity:0;transform:translateY(24px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* ── SECTIONS ── */
+.sec {
+  padding: 120px 0;
+  border-top: 1px solid var(--ink-ghost);
+  opacity: 0; transform: translateY(40px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.sec.on{opacity:1;transform:none;}
+
+.sec-id {
+  font-family: 'Space Mono', monospace;
+  font-size: 8px; letter-spacing: 0.6em;
+  color: var(--ink-ghost); margin-bottom: 16px;
+}
+
+h2 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(32px, 5.5vw, 56px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 48px;
+}
+
+h3 {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; letter-spacing: 0.3em;
+  color: var(--moss);
+  margin: 48px 0 16px;
+  text-transform: uppercase;
+}
+
+p {
+  font-size: 16px;
+  line-height: 1.9;
+  color: var(--ink);
+  max-width: 660px;
+  margin-bottom: 20px;
+}
+
+.lead {
+  font-size: clamp(18px,3vw,26px);
+  line-height: 1.55;
+  color: var(--paper);
+  font-weight: 200;
+  max-width: 700px;
+  margin-bottom: 36px;
+}
+
+/* ── CALLOUT ── */
+.callout {
+  border-left: 2px solid var(--moss);
+  padding: 20px 24px;
+  margin: 32px 0;
+  background: rgba(127,255,95,0.03);
+  font-family: 'Space Mono', monospace;
+  font-size: 11px; line-height: 1.9;
+  color: var(--ink-dim);
+}
+.callout.sun{border-color:var(--sun);background:rgba(255,233,74,0.03);}
+.callout.fire{border-color:var(--fire);background:rgba(255,92,26,0.03);}
+.callout.myc{border-color:var(--myc);background:rgba(199,125,255,0.03);}
+.callout.sky{border-color:var(--sky);background:rgba(0,229,255,0.03);}
+.callout strong{color:var(--moss);}
+.callout.sun strong{color:var(--sun);}
+.callout.fire strong{color:var(--fire);}
+.callout.myc strong{color:var(--myc);}
+.callout.sky strong{color:var(--sky);}
+
+/* ── ECO GRID ── */
+.eco-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 1px;
+  margin: 48px 0;
+  background: var(--ink-ghost);
+}
+.eco-cell {
+  background: var(--void);
+  padding: 28px 24px;
+  transition: background 0.3s;
+  cursor: default;
+}
+.eco-cell:hover{background: rgba(127,255,95,0.04);}
+.eco-icon{font-size: 28px; margin-bottom: 16px; display:block;}
+.eco-title{
+  font-family:'Syne',sans-serif;
+  font-weight:700; font-size:14px;
+  margin-bottom:8px; color:var(--paper);
+}
+.eco-desc{
+  font-size:12px; line-height:1.7;
+  color:var(--ink-dim);
+  font-family:'Space Mono',monospace;
+}
+@media(max-width:640px){.eco-grid{grid-template-columns:1fr 1fr;}}
+
+/* ── TIMELINE ── */
+.timeline { position:relative; margin:56px 0; }
+.timeline::before {
+  content:'';
+  position:absolute; left:0; top:0; bottom:0;
+  width:1px;
+  background: linear-gradient(to bottom,
+    var(--moss), var(--sun), var(--sky), var(--myc), var(--fire));
+}
+
+.tl-item {
+  padding-left: 40px;
+  margin-bottom: 56px;
+  position: relative;
+}
+.tl-dot {
+  position:absolute; left:-5px; top:4px;
+  width:10px; height:10px;
+  border-radius:50%;
+  box-shadow: 0 0 16px currentColor;
+}
+.tl-era {
+  font-family:'Space Mono',monospace;
+  font-size:8px; letter-spacing:0.4em;
+  margin-bottom:8px;
+}
+.tl-name {
+  font-family:'Syne',sans-serif;
+  font-weight:800; font-size:22px;
+  margin-bottom:8px;
+}
+.tl-body {
+  font-size:13px; line-height:1.8;
+  color:var(--ink-dim);
+  font-family:'Space Mono',monospace;
+  max-width:580px;
+}
+
+/* colors per phase */
+.tl-item:nth-child(1) .tl-dot{background:var(--moss); color:var(--moss);}
+.tl-item:nth-child(1) .tl-era{color:var(--moss);}
+.tl-item:nth-child(2) .tl-dot{background:var(--sun); color:var(--sun);}
+.tl-item:nth-child(2) .tl-era{color:var(--sun);}
+.tl-item:nth-child(3) .tl-dot{background:var(--sky); color:var(--sky);}
+.tl-item:nth-child(3) .tl-era{color:var(--sky);}
+.tl-item:nth-child(4) .tl-dot{background:var(--myc); color:var(--myc);}
+.tl-item:nth-child(4) .tl-era{color:var(--myc);}
+.tl-item:nth-child(5) .tl-dot{background:var(--fire); color:var(--fire);}
+.tl-item:nth-child(5) .tl-era{color:var(--fire);}
+.tl-item:nth-child(6) .tl-dot{background:var(--dew); color:var(--dew);}
+.tl-item:nth-child(6) .tl-era{color:var(--dew);}
+
+/* ── TABLE ── */
+.xtable {
+  width:100%; border-collapse:collapse;
+  margin:40px 0;
+  font-family:'Space Mono',monospace; font-size:11px;
+}
+.xtable th {
+  text-align:left; padding:12px 16px;
+  border-bottom: 1px solid var(--ink-ghost);
+  color:var(--ink-ghost); letter-spacing:0.25em;
+  font-size:8px; text-transform:uppercase;
+}
+.xtable td {
+  padding:14px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  color:var(--ink-dim); vertical-align:top;
+  line-height:1.6;
+}
+.xtable tr:hover td{background:rgba(255,255,255,0.02);}
+
+/* ── TOKEN VISUAL ── */
+.token-vis {
+  display:grid; grid-template-columns:1fr 1fr 1fr;
+  gap:1px; background:var(--ink-ghost);
+  margin:48px 0;
+}
+.tv-cell {
+  background:var(--void); padding:24px 20px;
+  transition:background 0.3s;
+}
+.tv-cell:hover{background:rgba(127,255,95,0.03);}
+.tv-pct{
+  font-family:'Syne',sans-serif;
+  font-weight:800; font-size:40px; line-height:1;
+  margin-bottom:8px;
+}
+.tv-label{
+  font-family:'Space Mono',monospace;
+  font-size:8px; letter-spacing:0.2em;
+  color:var(--ink-ghost); text-transform:uppercase;
+}
+.tv-amt{
+  font-family:'Space Mono',monospace;
+  font-size:10px; color:var(--ink-dim); margin-top:4px;
+}
+@media(max-width:640px){.token-vis{grid-template-columns:1fr 1fr;}}
+
+/* ── RISK MATRIX ── */
+.risk-grid {
+  display:grid; grid-template-columns:repeat(2,1fr);
+  gap:1px; background:var(--ink-ghost); margin:40px 0;
+}
+.risk-cell {
+  background:var(--void); padding:24px;
+}
+.risk-level {
+  font-family:'Space Mono',monospace;
+  font-size:8px; letter-spacing:0.3em;
+  margin-bottom:10px;
+}
+.risk-title {
+  font-family:'Syne',sans-serif;
+  font-weight:700; font-size:15px;
+  margin-bottom:8px;
+}
+.risk-fix {
+  font-size:11px; color:var(--ink-dim);
+  font-family:'Space Mono',monospace;
+  line-height:1.7;
+}
+@media(max-width:640px){.risk-grid{grid-template-columns:1fr;}}
+
+/* ── MEMECOIN SECTION ── */
+.meme-bg {
+  background: radial-gradient(ellipse at center,
+    rgba(255,233,74,0.04) 0%,
+    rgba(255,92,26,0.02) 40%,
+    transparent 70%
+  );
+}
+
+.meme-title {
+  font-family:'Syne',sans-serif;
+  font-weight:800;
+  font-size:clamp(28px,6vw,64px);
+  line-height:1;
+  letter-spacing:-0.02em;
+  margin-bottom:32px;
+}
+
+/* ── SCROLLING TICKER ── */
+.ticker-wrap {
+  overflow:hidden; white-space:nowrap;
+  padding:16px 0;
+  border-top:1px solid var(--ink-ghost);
+  border-bottom:1px solid var(--ink-ghost);
+  margin:48px 0;
+}
+.ticker {
+  display:inline-block;
+  animation:ticker 30s linear infinite;
+  font-family:'Space Mono',monospace;
+  font-size:11px; letter-spacing:0.2em;
+  color:var(--ink-dim);
+}
+@keyframes ticker {
+  0%{transform:translateX(0);}
+  100%{transform:translateX(-50%);}
+}
+
+/* ── FOOTER ── */
+footer {
+  padding:100px 0 60px;
+  border-top:1px solid var(--ink-ghost);
+  text-align:center;
+}
+.footer-mega {
+  font-family:'Syne',sans-serif;
+  font-weight:800;
+  font-size:clamp(60px,14vw,130px);
+  line-height:1;
+  letter-spacing:-0.04em;
+  margin-bottom:32px;
+}
+.footer-mega .y{color:var(--moss);}
+.footer-mega .o{color:var(--sun);}
+.footer-mega .n{color:var(--sky);}
+
+.footer-links {
+  display:flex; gap:24px; justify-content:center; flex-wrap:wrap;
+  font-family:'Space Mono',monospace;
+  font-size:9px; letter-spacing:0.25em;
+  margin-bottom:48px;
+}
+.footer-links a{color:var(--ink-dim);text-decoration:none;transition:color 0.2s;}
+.footer-links a:hover{color:var(--moss);}
+
+.footer-legal {
+  font-family:'Space Mono',monospace;
+  font-size:10px; line-height:1.9;
+  color:var(--ink-ghost);
+  max-width:600px; margin:0 auto;
+}
+.footer-legal .big-warn {
+  font-size:13px; color:var(--fire);
+  display:block; margin-bottom:16px;
+  letter-spacing:0.1em;
+}
+
+/* ── CANVAS GLITCH ── */
+.glitch-num {
+  position:relative; display:inline-block;
+  font-family:'Space Mono',monospace;
+}
+.glitch-num:hover::before,.glitch-num:hover::after {
+  content:attr(data-t);
+  position:absolute; top:0; left:0; width:100%; height:100%;
+}
+.glitch-num:hover::before{
+  color:var(--moss); animation:g1 0.25s infinite;
+  clip-path:polygon(0 0,100% 0,100% 40%,0 40%);
+}
+.glitch-num:hover::after{
+  color:var(--fire); animation:g2 0.25s infinite;
+  clip-path:polygon(0 60%,100% 60%,100% 100%,0 100%);
+}
+@keyframes g1{0%,100%{transform:translate(0);}50%{transform:translate(-4px,2px);}}
+@keyframes g2{0%,100%{transform:translate(0);}50%{transform:translate(4px,-2px);}}
+
+/* colors util */
+.c-moss{color:var(--moss);}
+.c-sun{color:var(--sun);}
+.c-sky{color:var(--sky);}
+.c-myc{color:var(--myc);}
+.c-fire{color:var(--fire);}
+.c-dew{color:var(--dew);}
+.c-dim{color:var(--ink-dim);}
+
+.thin-line {
+  width:40px; height:1px;
+  background:var(--moss);
+  margin:40px 0;
+}
+
+/* ── NFT CANVAS ROW ── */
+.nft-strip {
+  display:grid; grid-template-columns:repeat(6,1fr);
+  gap:1px; background:var(--ink-ghost);
+  margin:48px 0;
+}
+.nft-cell { position:relative; aspect-ratio:1; overflow:hidden; }
+.nft-cell canvas { width:100%; height:100%; display:block; }
+.nft-tag {
+  position:absolute; bottom:0; left:0; right:0;
+  padding:8px 6px;
+  background:linear-gradient(transparent, rgba(4,5,10,0.9));
+  font-family:'Space Mono',monospace;
+  font-size:7px; letter-spacing:0.1em;
+  color:var(--moss);
+}
+@media(max-width:640px){.nft-strip{grid-template-columns:repeat(3,1fr);}}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-ring"></div>
+<canvas id="life-canvas"></canvas>
+
+<nav>
+  <div class="nav-logo"><span class="y">Y</span><span class="o">O</span><span class="n">N</span></div>
+  <div class="nav-links">
+    <a href="#manifesto">Манифест</a>
+    <a href="#eco">Экополис</a>
+    <a href="#token">Токен</a>
+    <a href="#time">100 лет</a>
+    <a href="#risks">Риски</a>
+    <a href="#meme">Мем</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ═══════ HERO ═══════ -->
+<section class="hero">
+  <div class="hero-earth"></div>
+
+  <div class="hero-eyebrow">YON TOKEN · WHITEPAPER v2.∞ · ДУХ ЖИЗНИ · TON BLOCKCHAIN</div>
+
+  <div class="hero-title">
+    <span class="y">Y</span><span class="o">O</span><span class="n">N</span>
+  </div>
+
+  <div class="hero-claim">
+    Токен клуба живых людей.<br>
+    Для тех, кто строит бани, шьёт одежду,<br>
+    выращивает еду и мечтает об <em>экопоселении</em><br>
+    с собственной энергосетью и интернетом без цензуры.<br>
+    <br>
+    <span style="font-size:0.8em;color:var(--ink-dim);">Стратегия на 100 лет. Мемкоин. Фан. Никаких обещаний возврата инвестиций.</span>
+  </div>
+
+  <div class="hero-badges">
+    <span class="badge badge-g">🌿 Экопоселения</span>
+    <span class="badge badge-y">⚡ Альт. энергетика</span>
+    <span class="badge badge-s">🌐 Свободный интернет</span>
+    <span class="badge badge-p">🔬 Альт. исследования</span>
+    <span class="badge badge-r">🔥 Мемкоин</span>
+    <span class="badge badge-g">♾️ 100-летняя стратегия</span>
+  </div>
+
+  <div class="hero-scroll">SCROLL ↓</div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    YON · НЕ ИНВЕСТИЦИЯ · ЭТО ОБРАЗ ЖИЗНИ · ЭКОПОСЕЛЕНИЕ · СВОБОДНАЯ ЭНЕРГИЯ · ОТКРЫТЫЙ ИНТЕРНЕТ · МЕМКОИН · СЖИГАНИЕ · NFT · TON · STON.FI · ДУХ ЖИЗНИ · YON · НЕ ИНВЕСТИЦИЯ · ЭТО ОБРАЗ ЖИЗНИ · ЭКОПОСЕЛЕНИЕ · СВОБОДНАЯ ЭНЕРГИЯ · ОТКРЫТЫЙ ИНТЕРНЕТ · МЕМКОИН · СЖИГАНИЕ · NFT · TON · STON.FI · ДУХ ЖИЗНИ ·&nbsp;
+  </div>
+</div>
+
+<!-- ═══════ 01 МАНИФЕСТ ═══════ -->
+<section class="sec" id="manifesto">
+<div class="wrap">
+  <div class="sec-id">01 / МАНИФЕСТ</div>
+  <h2>Зачем <span class="c-moss">всё это</span><br>существует</h2>
+
+  <p class="lead">Мир меняется быстрее, чем успевают меняться институты. YON — это инструмент для тех, кто решил не ждать.</p>
+
+  <p>Клуб «Дух Жизни» начался как Telegram-чат, где люди с разными навыками могут помочь друг другу. Массаж в обмен на консультацию. Шитьё в обмен на стройку. Банный день в обмен на видеоурок. Это работало без токена. Токен просто делает это более интересным.</p>
+
+  <div class="callout">
+    <strong>Честное предупреждение:</strong> YON — это мемкоин с идеей. Не с гарантией. Если вы ждёте возврата инвестиций — вы не туда попали. Если вы ждёте сауны, огорода и спутникового интернета в лесу — добро пожаловать.
+  </div>
+
+  <p>Но за шуткой стоит серьёзная архитектура. Мы думаем на 50–100 лет вперёд. Потому что хорошие экосистемы — медленные. Мицелий растёт годами. Дубовый лес — веками. YON-экосистема строится так же.</p>
+
+  <div class="callout myc">
+    <strong>Мицелиевая философия:</strong> Грибница не «инвестирует» в деревья. Она создаёт сеть, в которой выживает каждый узел. YON — это грибница. NFT — узлы. Люди — деревья. Лес — экопоселение. Уловили метафору? Отлично. Идёмте дальше.
+  </div>
+</div>
+</section>
+
+<!-- ═══════ 02 ЭКОПОЛИС ═══════ -->
+<section class="sec" id="eco">
+<div class="wrap">
+  <div class="sec-id">02 / ЭКОПОЛИС</div>
+  <h2>Экопоселения<br>как <span class="c-moss">ядро</span><br>экосистемы</h2>
+
+  <p class="lead">Экопоселение — это не хиппи-коммуна 1970-х. Это децентрализованная инфраструктура для людей, которые хотят жить иначе.</p>
+
+  <p>YON-токен открывает доступ к сети экопоселений-партнёров. Держатель NFT с достаточным балансом YON получает физический доступ: ночёвки, еда из собственного хозяйства, пользование инфраструктурой. Это utility-токен в буквальном смысле — он даёт реальные утилиты.</p>
+
+  <div class="eco-grid">
+    <div class="eco-cell">
+      <span class="eco-icon">🌿</span>
+      <div class="eco-title">Органическое хозяйство</div>
+      <div class="eco-desc">Огороды, сады, теплицы. Оплата YON. Доступ по NFT-уровню.</div>
+    </div>
+    <div class="eco-cell">
+      <span class="eco-icon">⚡</span>
+      <div class="eco-title">Альтернативная энергетика</div>
+      <div class="eco-desc">Солнечные панели, ветряки, биогаз. Исследования свободной энергии.</div>
+    </div>
+    <div class="eco-cell">
+      <span class="eco-icon">🌐</span>
+      <div class="eco-title">Свободный интернет</div>
+      <div class="eco-desc">Mesh-сети, спутниковый доступ, альтернативные протоколы. Без блокировок.</div>
+    </div>
+    <div class="eco-cell">
+      <span class="eco-icon">🔬</span>
+      <div class="eco-title">Альт. исследования</div>
+      <div class="eco-desc">Независимые лаборатории. Биохакинг, материаловедение, нетрадиционные науки.</div>
+    </div>
+    <div class="eco-cell">
+      <span class="eco-icon">🛖</span>
+      <div class="eco-title">Проживание & Co-living</div>
+      <div class="eco-desc">NFT-уровень = уровень доступа. Genesis = первоочерёдность.</div>
+    </div>
+    <div class="eco-cell">
+      <span class="eco-icon">🧘</span>
+      <div class="eco-title">Здоровье & Практики</div>
+      <div class="eco-desc">Баня, массаж, медитация, йога. Всё оплачивается YON.</div>
+    </div>
+    <div class="eco-cell">
+      <span class="eco-icon">🏗️</span>
+      <div class="eco-title">Строительство & Ремёсла</div>
+      <div class="eco-desc">Натуральные материалы. Участники клуба строят друг другу.</div>
+    </div>
+    <div class="eco-cell">
+      <span class="eco-icon">🎓</span>
+      <div class="eco-title">Образование</div>
+      <div class="eco-desc">Офлайн-школа в поселении. Онлайн-курсы на YON. Детская академия.</div>
+    </div>
+    <div class="eco-cell">
+      <span class="eco-icon">🎨</span>
+      <div class="eco-title">Искусство & Контент</div>
+      <div class="eco-desc">Арт-резиденции, студии, коллаборации. YON за творчество.</div>
+    </div>
+  </div>
+
+  <div class="callout sun">
+    <strong>Уровни доступа по NFT:</strong><br>
+    Genesis (5×) → приоритетное место в первом поселении + право голоса по выбору участка<br>
+    Founders Club (3×) → доступ к услугам со скидкой 30% в YON<br>
+    Member (1×) → стандартный доступ к сети поселений<br>
+    Partner (0.5×) → доступ к маркетплейсу услуг<br>
+    <br>
+    Всё это — <strong>будущее</strong>. Сейчас у нас есть Telegram и амбиции. Это тоже немало.
+  </div>
+
+  <h3>Свободный интернет — отдельный разговор</h3>
+
+  <p>Один из самых ценных элементов экополиса — независимая коммуникационная инфраструктура. Это включает:</p>
+
+  <table class="xtable">
+    <thead>
+      <tr><th>Технология</th><th>Что даёт</th><th>Статус</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="c-moss">Starlink / аналоги</td><td>Спутниковый интернет без привязки к провайдерам</td><td>Доступно сейчас</td></tr>
+      <tr><td class="c-moss">Mesh-сети (LoRa, meshtastic)</td><td>Локальная сеть без вышек и серверов</td><td>Доступно сейчас</td></tr>
+      <tr><td class="c-sun">TON Sites / TON DNS</td><td>Сайты в блокчейне, неотключаемые</td><td>Работает на TON</td></tr>
+      <tr><td class="c-sun">IPFS / Filecoin</td><td>Децентрализованное хранение данных</td><td>Растущая экосистема</td></tr>
+      <tr><td class="c-myc">Ham Radio + данные</td><td>Передача данных без интернета вообще</td><td>Юридически чисто</td></tr>
+      <tr><td class="c-dim">Freifunk / open WiFi</td><td>Открытые точки доступа в поселении</td><td>Планируется</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout sky">
+    <strong>Квантовая связь:</strong> Когда квантовые коммуникации станут массовыми (~2040-е), YON-экосистема будет готова к интеграции. Мы строим протокол, не технологию. Протоколы переживают технологии.
+  </div>
+</div>
+</section>
+
+<!-- ═══════ 03 ТОКЕН ═══════ -->
+<section class="sec" id="token">
+<div class="wrap">
+  <div class="sec-id">03 / ТОКЕНОМИКА</div>
+  <h2><span class="glitch-num" data-t="1 000 000 000">1 000 000 000</span><br><span class="c-moss">YON</span></h2>
+
+  <p>Один миллиард. Больше не будет. Никогда. Зато будет меньше — механизм сжигания работает непрерывно.</p>
+
+  <div class="token-vis">
+    <div class="tv-cell">
+      <div class="tv-pct c-moss">40%</div>
+      <div class="tv-label">NFT дропы</div>
+      <div class="tv-amt">400 000 000 YON</div>
+    </div>
+    <div class="tv-cell">
+      <div class="tv-pct c-sun">20%</div>
+      <div class="tv-label">Команда</div>
+      <div class="tv-amt">200 000 000 YON</div>
+    </div>
+    <div class="tv-cell">
+      <div class="tv-pct c-sky">15%</div>
+      <div class="tv-label">Экосистема</div>
+      <div class="tv-amt">150 000 000 YON</div>
+    </div>
+    <div class="tv-cell">
+      <div class="tv-pct c-myc">10%</div>
+      <div class="tv-label">Ликвидность</div>
+      <div class="tv-amt">100 000 000 YON</div>
+    </div>
+    <div class="tv-cell">
+      <div class="tv-pct c-fire">10%</div>
+      <div class="tv-label">Маркетинг</div>
+      <div class="tv-amt">100 000 000 YON</div>
+    </div>
+    <div class="tv-cell">
+      <div class="tv-pct c-dim">5%</div>
+      <div class="tv-label">Резерв</div>
+      <div class="tv-amt">50 000 000 YON</div>
+    </div>
+  </div>
+
+  <div class="thin-line"></div>
+
+  <h3>Механика начислений на NFT</h3>
+  <p>Каждый день из пула NFT-дропов распределяется порция токенов между всеми держателями NFT. Пропорционально коэффициенту. Без участия человека.</p>
+
+  <div class="callout">
+    <strong>Формула:</strong><br>
+    Дроп(день) = (400 000 000 YON / 3650 дней) × (коэф. вашего NFT / Σ всех коэф.)<br><br>
+    При 6 Genesis NFT и никого больше: ≈ 45 000 YON/день на Genesis.<br>
+    При 500 участниках с разными NFT: Genesis всё равно получает в 5× больше Member.
+  </div>
+
+  <h3>Сжигание 🔥</h3>
+  <table class="xtable">
+    <thead>
+      <tr><th>Событие</th><th>Сжигается</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Каждая транзакция</td><td><span class="c-fire">10% от суммы</span></td></tr>
+      <tr><td>Ежемесячный авто-burn</td><td><span class="c-fire">0.1% от пула</span></td></tr>
+      <tr><td>Покупка Founders NFT</td><td><span class="c-fire">5% от стоимости</span></td></tr>
+      <tr><td>Штрафы за нарушения правил</td><td><span class="c-fire">DAO решает %</span></td></tr>
+      <tr><td>Специальные ивенты</td><td><span class="c-fire">Burn-дни по голосованию</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3>NFT — Genesis 6 основателей</h3>
+  <div class="nft-strip" id="nft-strip"></div>
+
+  <div class="callout fire">
+    <strong>Важно про Vesting команды:</strong> 200 млн токенов команды разлочиваются за 24 месяца с клиффом 6 месяцев. Это значит: первые 6 месяцев никто из команды не может продать ни одного YON. Потом — по 1/18 каждый месяц. Это не потому что мы не доверяем себе. Это потому что вы должны доверять нам.
+  </div>
+</div>
+</section>
+
+<!-- ═══════ 04 100 ЛЕТ ═══════ -->
+<section class="sec" id="time">
+<div class="wrap">
+  <div class="sec-id">04 / СТРАТЕГИЯ НА 100 ЛЕТ</div>
+  <h2>Что будет<br>через <span class="c-sun">50</span> и <span class="c-fire">100</span><br>лет</h2>
+
+  <p class="lead">Большинство крипто-проектов думают на 3–5 лет. Мы думаем на поколения вперёд. Потому что экопоселение — это не стартап. Это цивилизационный выбор.</p>
+
+  <div class="callout myc">
+    <strong>Честность о будущем:</strong> Никто не знает, каким будет мир через 100 лет. Блокчейн может умереть. TON может устареть. YON может обесцениться. Но идея децентрализованного живого сообщества с реальной инфраструктурой — эта идея не умрёт. Мы строим не под технологию. Мы строим под людей.
+  </div>
+
+  <div class="timeline">
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-era">ФАЗА 0 · 2024–2025 · СЕМЯ</div>
+      <div class="tl-name c-moss">Посев</div>
+      <div class="tl-body">
+        6 Genesis NFT. Telegram-клуб. YON на ston.fi. Первые транзакции: баня за токен, массаж за YON.
+        Главная задача — доказать, что люди готовы меняться услугами через блокчейн.
+        Риск: никто не поверит. Противодействие: мы сами начнём меняться.
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-era">ФАЗА 1 · 2025–2027 · КОРНИ</div>
+      <div class="tl-name c-sun">Первое поселение</div>
+      <div class="tl-body">
+        Аренда или покупка первого участка. Солнечные панели, огород, баня, co-living.
+        50+ Founders NFT. Telegram Mini App с каталогом услуг. DAO голосование запущено.
+        Mesh-сеть на территории. Первая офлайн-встреча всех держателей NFT.
+        Риск провала: недостаток ликвидности. Митигация: гранты TON Foundation.
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-era">ФАЗА 2 · 2027–2032 · ВЕТВИ</div>
+      <div class="tl-name c-sky">Сеть поселений</div>
+      <div class="tl-body">
+        3–5 экопоселений в разных регионах/странах. Каждое — независимая энергосеть.
+        500+ участников. YON как основная валюта внутри сети.
+        Независимый интернет: Starlink + mesh + TON Sites.
+        Лаборатория альтернативных исследований. Детская школа в первом поселении.
+        Риск: регуляторное давление. Митигация: разные юрисдикции, DAO-структура.
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-era">ФАЗА 3 · 2032–2045 · ПЛОД</div>
+      <div class="tl-name c-myc">Автономия</div>
+      <div class="tl-body">
+        10+ поселений. Полная энергетическая независимость. Собственная образовательная система.
+        YON как реальная единица обмена между тысячами людей.
+        Возможно: интеграция с другими крипто-экосистемами или форк на собственный блокчейн,
+        если TON устареет. DAO управляет бюджетами на уровне небольшого города.
+        Альтернативные технологии: тестирование нетрадиционных источников энергии.
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-era">ФАЗА 4 · 2045–2075 · ЛЕС</div>
+      <div class="tl-name c-fire">Цивилизация</div>
+      <div class="tl-body">
+        Сеть из 50–100 поселений. Население от 10 000 до 100 000 человек.
+        Собственная медицина, наука, культура. YON или его преемник —
+        резервная валюта для внутреннего рынка.
+        Квантовые коммуникации (если к тому времени доступны).
+        Независимость от национальных сетей электроснабжения и интернета.
+        Genesis NFT — историческая реликвия. Первые 6 основателей — легенда экосистемы.
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-era">ФАЗА ∞ · 2075–2125 · СЕМЯ СНОВА</div>
+      <div class="tl-name c-dew">Наследие</div>
+      <div class="tl-body">
+        То, что мы построим, переживёт нас. Как Средневековые соборы строились поколениями,
+        не видевшими финала. YON-экосистема — это наш собор.
+        Мы не знаем, как будет выглядеть блокчейн через 100 лет.
+        Но мы знаем, что люди будут нуждаться в сообществе, земле и свободе.
+        Это не изменится никогда.
+      </div>
+    </div>
+
+  </div>
+
+  <div class="callout">
+    <strong>Нюансы блокчейн-экосистем на длинных горизонтах:</strong><br><br>
+    → Blockchain obsolescence риск: TON через 50 лет может устареть как Flash через 20. Решение: DAO может проголосовать за миграцию.<br>
+    → Regulatory capture: правительства будут пытаться регулировать. Решение: мультиюрисдикционная структура.<br>
+    → Community fragmentation: большие сообщества делятся. Решение: федеративная модель поселений с автономией.<br>
+    → Technology acceleration: AI, квантовые компьютеры изменят всё. Решение: принцип «протокол важнее технологии».<br>
+    → Key person risk: основатели смертны. Решение: DAO с первого дня, не когда-то потом.
+  </div>
+</div>
+</section>
+
+<!-- ═══════ 05 РИСКИ ═══════ -->
+<section class="sec" id="risks">
+<div class="wrap">
+  <div class="sec-id">05 / РИСКИ</div>
+  <h2>Всё что<br>может пойти<br><span class="c-fire">не так</span></h2>
+
+  <p>Мы честные люди. Вот полный список того, почему YON может провалиться. Прочитайте прежде чем делать что-либо с этим токеном.</p>
+
+  <div class="risk-grid">
+    <div class="risk-cell">
+      <div class="risk-level c-fire">🔴 ВЫСОКИЙ</div>
+      <div class="risk-title">Токен обесценится</div>
+      <div class="risk-fix">Мемкоины умирают часто. YON может стать нулём. Держите только то, что готовы потерять полностью. Мы не несём ответственности.</div>
+    </div>
+    <div class="risk-cell">
+      <div class="risk-level c-fire">🔴 ВЫСОКИЙ</div>
+      <div class="risk-title">Низкая ликвидность</div>
+      <div class="risk-fix">На ston.fi может быть некому продать. DEX-ликвидность — штука хрупкая. Начальный пул 100M YON — наш вклад, но гарантий нет.</div>
+    </div>
+    <div class="risk-cell">
+      <div class="risk-level c-sun">🟡 СРЕДНИЙ</div>
+      <div class="risk-title">Регуляторный удар</div>
+      <div class="risk-fix">В РФ крипта ограничена. TON базируется в Швейцарии. Мы — клуб по интересам. Это снижает риск, но не до нуля.</div>
+    </div>
+    <div class="risk-cell">
+      <div class="risk-level c-sun">🟡 СРЕДНИЙ</div>
+      <div class="risk-title">TON устареет</div>
+      <div class="risk-fix">Через 20–30 лет TON может быть не актуален. DAO будет вправе проголосовать за миграцию на новый блокчейн. Это заложено в протокол.</div>
+    </div>
+    <div class="risk-cell">
+      <div class="risk-level c-sun">🟡 СРЕДНИЙ</div>
+      <div class="risk-title">Экопоселение не состоится</div>
+      <div class="risk-fix">Это долгосрочный проект. Если денег не хватит — YON останется клубом в Telegram. Тоже неплохо. Баня никуда не денется.</div>
+    </div>
+    <div class="risk-cell">
+      <div class="risk-level c-moss">🟢 НИЗКИЙ</div>
+      <div class="risk-title">Смарт-контракт взломают</div>
+      <div class="risk-fix">Резервный фонд 5% и обязательный аудит перед запуском основных контрактов.</div>
+    </div>
+    <div class="risk-cell">
+      <div class="risk-level c-moss">🟢 НИЗКИЙ</div>
+      <div class="risk-title">Команда поссорится</div>
+      <div class="risk-fix">У нас есть массажист и банщик. Конфликты разрешаются в парной. Проверено.</div>
+    </div>
+    <div class="risk-cell">
+      <div class="risk-level c-myc">🟣 ЭКЗИСТЕНЦИАЛЬНЫЙ</div>
+      <div class="risk-title">Интернет исчезнет</div>
+      <div class="risk-fix">Тогда mesh-сети и ham radio. У нас есть план B. И план C. И огород.</div>
+    </div>
+  </div>
+
+  <div class="callout fire">
+    <strong>Главное предупреждение:</strong><br>
+    YON — это мемкоин. Не финансовый инструмент. Не ценная бумага. Не обещание дохода.
+    Мы не несём ответственности за изменение цены токена.
+    Участие в экосистеме — добровольное. Всё сказанное в этом документе — видение, не оферта.
+    DYOR. NFA. Do it for the vibe.
+  </div>
+</div>
+</section>
+
+<!-- ═══════ 06 DAO ═══════ -->
+<section class="sec">
+<div class="wrap">
+  <div class="sec-id">06 / УПРАВЛЕНИЕ</div>
+  <h2>DAO:<br>кто <span class="c-myc">решает</span><br>что</h2>
+
+  <p class="lead">Начинаем с доверия команде. Заканчиваем децентрализацией. Постепенно.</p>
+
+  <table class="xtable">
+    <thead>
+      <tr><th>NFT</th><th>Голосов</th><th>Что решает</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="c-moss">Genesis (×6)</td><td class="c-moss">5 голосов</td><td>Всё. Включая конституционные изменения.</td></tr>
+      <tr><td class="c-sun">Founders Club</td><td class="c-sun">3 голоса</td><td>Новые партнёрства, изменения коэффициентов, бюджет маркетинга.</td></tr>
+      <tr>
+        <td>Member</td><td>1 голос</td><td>Текущие решения: новые услуги, ивенты, правила клуба.</td></tr>
+      <tr><td class="c-dim">Partner</td><td class="c-dim">0 голосов</td><td>Только наблюдение. Партнёры предлагают — участники решают.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout myc">
+    <strong>Мицелиевый принцип управления:</strong> В настоящем мицелии нет CEO. Каждый узел принимает локальные решения на основе химических сигналов от соседей. DAO стремится к тому же — но медленно. Сначала нам нужны правила. Потом мы их отменим за ненадобностью.
+  </div>
+
+  <h3>Что может решить DAO</h3>
+  <p>Изменение коэффициентов начисления YON · Выбор новых поселений-партнёров · Распределение экосистемного резерва · Burn-ивенты · Миграция на новый блокчейн · Принятие новых типов NFT · Исключение участника за нарушения · Финансирование альтернативных исследований</p>
+</div>
+</section>
+
+<!-- ═══════ 07 МЕМКОИН ═══════ -->
+<section class="sec meme-bg" id="meme">
+<div class="wrap">
+  <div class="sec-id">07 / МЕМ И ФАН</div>
+
+  <div class="meme-title">
+    YON —<br>это <span class="c-sun">мемкоин</span><br>с <span class="c-moss">огородом</span>
+  </div>
+
+  <p class="lead">Серьёзно. Мы не притворяемся серьёзными. Мемкоины — это культура. YON — это культура с практическим применением.</p>
+
+  <div class="callout sun">
+    <strong>Почему мемкоин — это не плохо:</strong><br><br>
+    DOGE начинался как шутка. Теперь на него можно купить SpaceX-мерч.
+    SHIB — шутка. Потом вакцинировала детей в Индии.
+    YON — шутка с баней, огородом и спутниковым интернетом в лесу.
+    Смейтесь сейчас. Паримся потом.
+  </div>
+
+  <h3>Правила мемкоина YON</h3>
+  <table class="xtable">
+    <thead>
+      <tr><th>Правило</th><th>Объяснение</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="c-moss">1. Не обещаем x100</td><td>Честно: мы не знаем. Может быть x0.01. Держи только сколько не жалко.</td></tr>
+      <tr><td class="c-moss">2. Фан обязателен</td><td>Скучные люди не держат YON. Скучные люди держат облигации.</td></tr>
+      <tr><td class="c-moss">3. Баня важнее графика</td><td>Если цена падает — идём в баню. Там нет телефона.</td></tr>
+      <tr><td class="c-moss">4. Мем = контент = маркетинг</td><td>Лучший мем про YON — это бесплатная реклама. Делайте мемы.</td></tr>
+      <tr><td class="c-moss">5. Сообщество > токен</td><td>Если YON умрёт — сообщество останется. Сообщество важнее.</td></tr>
+      <tr><td class="c-moss">6. NFA навсегда</td><td>No Financial Advice. Всегда. Даже если очень хочется посоветовать.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <strong>Официальный мем YON:</strong><br><br>
+    — Что такое YON?<br>
+    — Это токен для людей которые строят бани и экопоселения на блокчейне TON.<br>
+    — Это звучит безумно.<br>
+    — Да.<br>
+    — Где купить?<br>
+    — ston.fi<br>
+    — ...ладно.
+  </div>
+</div>
+</section>
+
+<!-- ═══════ 08 КОМАНДА ═══════ -->
+<section class="sec">
+<div class="wrap">
+  <div class="sec-id">08 / КОМАНДА</div>
+  <h2>Шесть<br><span class="c-moss">Genesis</span></h2>
+
+  <p>Шесть человек. Шесть NFT. Шесть судеб вплетённых в смарт-контракт на блокчейне TON. Клифф 6 месяцев. Потом по чуть-чуть.</p>
+
+  <table class="xtable">
+    <thead>
+      <tr><th>Участник</th><th>NFT</th><th>Множитель</th><th>Направление</th><th>Vesting</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="c-moss">Я (Admin)</td><td>#001</td><td class="c-moss">5×</td><td>Архитектор хаоса, стратегия</td><td>24 мес.</td></tr>
+      <tr><td class="c-sun">Павел</td><td>#002</td><td class="c-moss">5×</td><td>Co-Founder (TBD)</td><td>24 мес.</td></tr>
+      <tr><td class="c-sky">Владимир</td><td>#003</td><td class="c-moss">5×</td><td>Co-Founder (TBD)</td><td>24 мес.</td></tr>
+      <tr><td class="c-myc">Георгий</td><td>#004</td><td class="c-moss">5×</td><td>Co-Founder (TBD)</td><td>24 мес.</td></tr>
+      <tr><td class="c-fire">Лера</td><td>#005</td><td class="c-moss">5×</td><td>Шитьё, дизайн, арт</td><td>24 мес.</td></tr>
+      <tr><td class="c-dew">Наталья</td><td>#006</td><td class="c-moss">5×</td><td>Co-Founder (TBD)</td><td>24 мес.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <strong>TBD — это не слабость:</strong> Каждый основатель приносит в клуб то, что умеет. Список навыков уточняется в живом диалоге. Это честнее, чем придуманные должности.
+  </div>
+</div>
+</section>
+
+</main>
+
+<!-- TICKER BOTTOM -->
+<div class="ticker-wrap">
+  <div class="ticker" style="animation-direction:reverse;">
+    НЕТ ГАРАНТИЙ ВОЗВРАТА ИНВЕСТИЦИЙ · DYOR · NFA · DO IT FOR THE VIBE · YON IS A MEMECOIN · ЭКОПОСЕЛЕНИЕ · СВОБОДНЫЙ ИНТЕРНЕТ · БАНЯ · ОГОРОД · TON · STON.FI · ДИСКЛЕЙМЕР · ДИСКЛЕЙМЕР · ДИСКЛЕЙМЕР · НЕТ ГАРАНТИЙ ВОЗВРАТА ИНВЕСТИЦИЙ · DYOR · NFA · DO IT FOR THE VIBE · YON IS A MEMECOIN · ЭКОПОСЕЛЕНИЕ · СВОБОДНЫЙ ИНТЕРНЕТ · БАНЯ · ОГОРОД · TON · STON.FI ·&nbsp;
+  </div>
+</div>
+
+<footer>
+<div class="wrap">
+  <div class="footer-mega">
+    <span class="y">Y</span><span class="o">O</span><span class="n">N</span>
+  </div>
+
+  <div class="footer-links">
+    <a href="https://t.me/duhzhizni">t.me/duhzhizni</a>
+    <a href="https://ston.fi">ston.fi</a>
+    <a href="https://ton.org">ton.org</a>
+    <a href="https://ton.org/grants">TON Grants</a>
+  </div>
+
+  <div class="footer-legal">
+    <span class="big-warn">⚠️ ВАЖНЫЙ ДИСКЛЕЙМЕР — ПРОЧИТАЙТЕ</span>
+    Этот документ не является инвестиционным предложением, финансовым советом,
+    проспектом эмиссии или офертой. YON — это utility-мемкоин на блокчейне TON.
+    Его цена может упасть до нуля. Мы не несём ответственности за ваши решения.
+    Участие в экосистеме — добровольное. Всё описанное — это видение и намерение,
+    а не юридически обязывающие обещания.<br><br>
+    NFA · DYOR · Do it for the vibe · Дух Жизни © 2024–∞ · Whitepaper v2.∞
+  </div>
+</div>
+</footer>
+
+<script>
+// ── CURSOR ──
+const cur = document.getElementById('cur');
+const ring = document.getElementById('cur-ring');
+let mx = 0, my = 0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cur.style.left = (mx - 5) + 'px';
+  cur.style.top = (my - 5) + 'px';
+  ring.style.left = (mx - 16) + 'px';
+  ring.style.top = (my - 16) + 'px';
+});
+document.querySelectorAll('a,button').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cur.style.transform = 'scale(2)';
+    ring.style.transform = 'scale(1.5)';
+  });
+  el.addEventListener('mouseleave', () => {
+    cur.style.transform = 'scale(1)';
+    ring.style.transform = 'scale(1)';
+  });
+});
+
+// ── SCROLL REVEAL ──
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); });
+}, { threshold: 0.06 });
+document.querySelectorAll('.sec').forEach(s => io.observe(s));
+
+// ── LIVING CANVAS — Organic growth simulation ──
+(function() {
+  const cv = document.getElementById('life-canvas');
+  const ctx = cv.getContext('2d');
+  let W, H;
+  const particles = [];
+  const COLORS = ['#7fff5f','#ffe94a','#00e5ff','#c77dff','#ff5c1a','#a8ffdd'];
+
+  function resize() {
+    W = cv.width = window.innerWidth;
+    H = cv.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Spawn mycelium-like particles
+  for (let i = 0; i < 60; i++) {
+    particles.push({
+      x: Math.random() * 1200,
+      y: Math.random() * 900,
+      vx: (Math.random() - 0.5) * 0.4,
+      vy: (Math.random() - 0.5) * 0.4,
+      life: Math.random(),
+      maxLife: 0.6 + Math.random() * 0.4,
+      size: 1 + Math.random() * 2,
+      color: COLORS[Math.floor(Math.random() * COLORS.length)],
+      angle: Math.random() * Math.PI * 2,
+      turnSpeed: (Math.random() - 0.5) * 0.05,
+      trail: []
+    });
+  }
+
+  let frame = 0;
+  function draw() {
+    ctx.fillStyle = 'rgba(4,5,10,0.015)';
+    ctx.fillRect(0, 0, W, H);
+
+    particles.forEach(p => {
+      p.angle += p.turnSpeed + Math.sin(frame * 0.01 + p.x * 0.005) * 0.02;
+      p.vx = Math.cos(p.angle) * 0.5;
+      p.vy = Math.sin(p.angle) * 0.5;
+      p.x += p.vx;
+      p.y += p.vy;
+      p.life += 0.002;
+
+      if (p.x < 0) p.x = W;
+      if (p.x > W) p.x = 0;
+      if (p.y < 0) p.y = H;
+      if (p.y > H) p.y = 0;
+
+      if (p.life > p.maxLife) {
+        p.life = 0;
+        p.x = Math.random() * W;
+        p.y = Math.random() * H;
+        p.angle = Math.random() * Math.PI * 2;
+      }
+
+      const alpha = Math.sin(p.life / p.maxLife * Math.PI) * 0.6;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fillStyle = p.color + Math.floor(alpha * 255).toString(16).padStart(2,'0');
+      ctx.fill();
+
+      // Draw connection lines (mycelium effect)
+      particles.forEach(p2 => {
+        const dx = p.x - p2.x, dy = p.y - p2.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 120 && dist > 0) {
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(p2.x, p2.y);
+          const lineAlpha = (1 - dist / 120) * 0.15 * alpha;
+          ctx.strokeStyle = p.color + Math.floor(lineAlpha * 255).toString(16).padStart(2,'0');
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      });
+    });
+
+    frame++;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ── NFT STRIP ──
+(function() {
+  const strip = document.getElementById('nft-strip');
+  const names = ['#001','#002','#003','#004','#005','#006'];
+  const palettes = [
+    ['#7fff5f','#00e5ff'],
+    ['#ffe94a','#ff5c1a'],
+    ['#00e5ff','#c77dff'],
+    ['#c77dff','#7fff5f'],
+    ['#ff5c1a','#ffe94a'],
+    ['#a8ffdd','#00e5ff'],
+  ];
+
+  names.forEach((id, i) => {
+    const cell = document.createElement('div');
+    cell.className = 'nft-cell';
+    const canvas = document.createElement('canvas');
+    canvas.width = 160; canvas.height = 160;
+    cell.appendChild(canvas);
+    const tag = document.createElement('div');
+    tag.className = 'nft-tag';
+    tag.textContent = 'Genesis ' + id;
+    cell.appendChild(tag);
+    strip.appendChild(cell);
+
+    const ctx = canvas.getContext('2d');
+    const [c1, c2] = palettes[i];
+    let t = i * 1.1;
+
+    function drawNFT() {
+      ctx.fillStyle = '#04050a';
+      ctx.fillRect(0, 0, 160, 160);
+
+      // Organic blob art
+      for (let r = 0; r < 8; r++) {
+        ctx.beginPath();
+        const cx = 80 + Math.sin(t * 0.7 + r) * 25;
+        const cy = 80 + Math.cos(t * 0.5 + r * 0.7) * 25;
+        const rad = 15 + r * 10 + Math.sin(t + r * 0.4) * 8;
+        ctx.arc(cx, cy, rad, 0, Math.PI * 2);
+        const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, rad);
+        g.addColorStop(0, c1 + '18');
+        g.addColorStop(1, c2 + '00');
+        ctx.fillStyle = g;
+        ctx.fill();
+        if (r % 2 === 0) {
+          ctx.strokeStyle = c1 + '30';
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+
+      // Center YON
+      ctx.font = 'bold 22px monospace';
+      ctx.fillStyle = c1 + 'cc';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('YON', 80, 80);
+
+      t += 0.012;
+      requestAnimationFrame(drawNFT);
+    }
+    drawNFT();
+  });
+})();
+</script>
+</body>
+</html>
