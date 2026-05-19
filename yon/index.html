@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YON — Whitepaper v∞</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Zen+Kaku+Gothic+New:wght@300;400;700;900&family=Noto+Serif+JP:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --void: #050508;
+    --paper: #f7f5f0;
+    --ink: #0a0a0f;
+    --yon-cyan: #00fff7;
+    --yon-magenta: #ff00c8;
+    --yon-lime: #aaff00;
+    --yon-orange: #ff6b00;
+    --yon-blue: #0044ff;
+    --dna-a: #ff003c;
+    --dna-b: #00c8ff;
+    --quantum: rgba(255,255,255,0.03);
+    --gap: 1px;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  ::selection { background: var(--yon-cyan); color: var(--void); }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--void);
+    color: var(--paper);
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: crosshair;
+  }
+
+  /* ── CANVAS FRACTALS ── */
+  #fractal-bg {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    opacity: 0.07;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ── DNA HELIX SIDE DECORATION ── */
+  .dna-rail {
+    position: fixed;
+    top: 0; left: 18px;
+    width: 24px; height: 100vh;
+    z-index: 2;
+    overflow: hidden;
+  }
+  .dna-rail svg { width: 100%; height: 100%; }
+
+  .dna-rail-right {
+    left: auto; right: 18px;
+  }
+
+  /* ── MAIN LAYOUT ── */
+  main {
+    position: relative;
+    z-index: 5;
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 0 60px;
+  }
+
+  /* ── QUANTUM NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
+    opacity: 0.4;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 0;
+    position: relative;
+  }
+
+  .hero-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    color: var(--yon-cyan);
+    text-transform: uppercase;
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: fadeUp 1s 0.2s forwards;
+  }
+
+  .hero-logo {
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-weight: 900;
+    font-size: clamp(88px, 18vw, 160px);
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+    position: relative;
+    display: inline-block;
+    opacity: 0;
+    animation: fadeUp 1s 0.4s forwards;
+  }
+
+  .hero-logo .y { color: var(--yon-cyan); }
+  .hero-logo .o { 
+    color: transparent;
+    -webkit-text-stroke: 1px var(--yon-magenta);
+    display: inline-block;
+    animation: spinO 12s linear infinite;
+  }
+  .hero-logo .n { color: var(--yon-lime); }
+
+  @keyframes spinO {
+    0%, 100% { transform: skewX(0deg); }
+    25% { transform: skewX(-8deg); }
+    75% { transform: skewX(8deg); }
+  }
+
+  .hero-sub {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 1.9;
+    color: rgba(247,245,240,0.55);
+    margin-top: 32px;
+    max-width: 480px;
+    opacity: 0;
+    animation: fadeUp 1s 0.6s forwards;
+    font-style: italic;
+  }
+
+  .hero-divider {
+    width: 1px;
+    height: 120px;
+    background: linear-gradient(to bottom, var(--yon-cyan), transparent);
+    margin: 48px 0;
+    opacity: 0;
+    animation: fadeUp 1s 0.8s forwards;
+  }
+
+  .hero-meta {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    color: rgba(247,245,240,0.25);
+    opacity: 0;
+    animation: fadeUp 1s 1s forwards;
+  }
+
+  /* ── SECTION ── */
+  section {
+    padding: 100px 0;
+    border-top: 1px solid rgba(255,255,255,0.04);
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+  section.visible { opacity: 1; transform: none; }
+
+  .sec-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.5em;
+    color: var(--yon-magenta);
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  h2 {
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-weight: 700;
+    font-size: clamp(28px, 5vw, 44px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 40px;
+  }
+
+  h3 {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    color: var(--yon-lime);
+    margin-bottom: 16px;
+    margin-top: 48px;
+  }
+
+  p {
+    font-size: 15px;
+    line-height: 1.9;
+    color: rgba(247,245,240,0.72);
+    margin-bottom: 20px;
+    max-width: 640px;
+  }
+
+  .big-p {
+    font-size: clamp(18px, 3vw, 26px);
+    line-height: 1.5;
+    color: var(--paper);
+    font-weight: 300;
+    margin-bottom: 32px;
+    max-width: 700px;
+  }
+
+  /* ── HYPER ACCENT TEXT ── */
+  .acc-c { color: var(--yon-cyan); }
+  .acc-m { color: var(--yon-magenta); }
+  .acc-l { color: var(--yon-lime); }
+  .acc-o { color: var(--yon-orange); }
+
+  /* ── JOKE CALLOUT ── */
+  .joke {
+    border-left: 2px solid var(--yon-cyan);
+    padding: 20px 28px;
+    margin: 36px 0;
+    background: rgba(0,255,247,0.03);
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    line-height: 1.8;
+    color: rgba(247,245,240,0.6);
+    font-style: italic;
+  }
+  .joke strong {
+    color: var(--yon-cyan);
+    font-style: normal;
+  }
+
+  .joke-m {
+    border-left-color: var(--yon-magenta);
+    background: rgba(255,0,200,0.03);
+  }
+  .joke-m strong { color: var(--yon-magenta); }
+
+  .joke-l {
+    border-left-color: var(--yon-lime);
+    background: rgba(170,255,0,0.03);
+  }
+  .joke-l strong { color: var(--yon-lime); }
+
+  /* ── TOKEN PIE (CSS ART) ── */
+  .token-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin: 48px 0;
+  }
+
+  .token-cell {
+    padding: 24px 20px;
+    position: relative;
+    overflow: hidden;
+    cursor: default;
+    transition: transform 0.3s ease;
+  }
+  .token-cell:hover { transform: scale(1.02); z-index: 10; }
+
+  .token-cell::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 2px;
+  }
+
+  .tc-1 { background: rgba(0,255,247,0.05); }
+  .tc-1::before { background: var(--yon-cyan); }
+  .tc-2 { background: rgba(255,0,200,0.05); }
+  .tc-2::before { background: var(--yon-magenta); }
+  .tc-3 { background: rgba(170,255,0,0.05); }
+  .tc-3::before { background: var(--yon-lime); }
+  .tc-4 { background: rgba(255,107,0,0.05); }
+  .tc-4::before { background: var(--yon-orange); }
+  .tc-5 { background: rgba(0,68,255,0.05); }
+  .tc-5::before { background: var(--yon-blue); }
+  .tc-6 { background: rgba(255,255,255,0.03); }
+  .tc-6::before { background: rgba(255,255,255,0.2); }
+
+  .tc-pct {
+    font-family: 'Space Mono', monospace;
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .tc-1 .tc-pct { color: var(--yon-cyan); }
+  .tc-2 .tc-pct { color: var(--yon-magenta); }
+  .tc-3 .tc-pct { color: var(--yon-lime); }
+  .tc-4 .tc-pct { color: var(--yon-orange); }
+  .tc-5 .tc-pct { color: var(--yon-blue); }
+  .tc-6 .tc-pct { color: rgba(255,255,255,0.4); }
+
+  .tc-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    font-family: 'Space Mono', monospace;
+    color: rgba(247,245,240,0.4);
+    text-transform: uppercase;
+  }
+  .tc-sub {
+    font-size: 11px;
+    color: rgba(247,245,240,0.25);
+    margin-top: 4px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* ── NFT CARDS ── */
+  .nft-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    margin: 48px 0;
+  }
+
+  .nft-card {
+    aspect-ratio: 1;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .nft-card canvas {
+    width: 100%; height: 100%;
+    display: block;
+  }
+
+  .nft-overlay {
+    position: absolute; bottom: 0; left: 0;
+    width: 100%; padding: 12px 10px;
+    background: linear-gradient(transparent, rgba(5,5,8,0.9));
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+  }
+  .nft-id { color: var(--yon-cyan); }
+  .nft-mult { color: var(--yon-lime); font-size: 14px; font-weight: 700; }
+
+  /* ── ROADMAP ── */
+  .roadmap {
+    position: relative;
+    padding-left: 32px;
+    margin: 48px 0;
+  }
+  .roadmap::before {
+    content: '';
+    position: absolute; left: 0; top: 8px; bottom: 8px;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--yon-cyan), var(--yon-magenta), var(--yon-lime));
+  }
+
+  .rm-item {
+    position: relative;
+    margin-bottom: 40px;
+  }
+  .rm-item::before {
+    content: '';
+    position: absolute; left: -36px; top: 6px;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--yon-cyan);
+    box-shadow: 0 0 12px var(--yon-cyan);
+  }
+  .rm-item:nth-child(2)::before { background: var(--yon-magenta); box-shadow: 0 0 12px var(--yon-magenta); }
+  .rm-item:nth-child(3)::before { background: var(--yon-lime); box-shadow: 0 0 12px var(--yon-lime); }
+  .rm-item:nth-child(4)::before { background: var(--yon-orange); box-shadow: 0 0 12px var(--yon-orange); }
+  .rm-item:nth-child(5)::before { background: var(--yon-blue); box-shadow: 0 0 12px var(--yon-blue); }
+
+  .rm-phase {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    color: var(--yon-cyan);
+    margin-bottom: 6px;
+  }
+  .rm-item:nth-child(2) .rm-phase { color: var(--yon-magenta); }
+  .rm-item:nth-child(3) .rm-phase { color: var(--yon-lime); }
+  .rm-item:nth-child(4) .rm-phase { color: var(--yon-orange); }
+  .rm-item:nth-child(5) .rm-phase { color: var(--yon-blue); }
+
+  .rm-title {
+    font-weight: 700;
+    font-size: 18px;
+    margin-bottom: 6px;
+  }
+  .rm-desc { font-size: 13px; color: rgba(247,245,240,0.45); line-height: 1.7; }
+
+  /* ── QUANTUM TABLE ── */
+  .q-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 40px 0;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+  }
+  .q-table th {
+    text-align: left;
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    color: rgba(247,245,240,0.35);
+    letter-spacing: 0.2em;
+    font-size: 9px;
+    text-transform: uppercase;
+  }
+  .q-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    color: rgba(247,245,240,0.65);
+    vertical-align: top;
+  }
+  .q-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+  /* ── BURNING COUNTER ── */
+  .burn-box {
+    text-align: center;
+    padding: 60px 0;
+    position: relative;
+  }
+  .burn-num {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(40px, 8vw, 72px);
+    font-weight: 700;
+    color: var(--yon-orange);
+    text-shadow: 0 0 40px rgba(255,107,0,0.6);
+    letter-spacing: -0.02em;
+    animation: flicker 3s ease-in-out infinite;
+  }
+  @keyframes flicker {
+    0%, 100% { opacity: 1; text-shadow: 0 0 40px rgba(255,107,0,0.6); }
+    50% { opacity: 0.85; text-shadow: 0 0 80px rgba(255,107,0,0.9), 0 0 120px rgba(255,107,0,0.4); }
+  }
+  .burn-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.4em;
+    color: rgba(255,107,0,0.5);
+    margin-top: 12px;
+    text-transform: uppercase;
+  }
+
+  /* ── TEAM ── */
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin: 48px 0;
+  }
+
+  .team-card {
+    padding: 28px 20px;
+    background: rgba(255,255,255,0.02);
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+  }
+  .team-card:hover { background: rgba(255,255,255,0.04); }
+
+  .team-card::after {
+    content: attr(data-nft);
+    position: absolute;
+    top: 16px; right: 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    color: rgba(255,255,255,0.15);
+  }
+
+  .team-avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    margin-bottom: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+
+  .team-name {
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+  .team-role {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: rgba(247,245,240,0.3);
+    text-transform: uppercase;
+  }
+  .team-mult {
+    font-family: 'Space Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    margin-top: 16px;
+  }
+
+  /* ── FORMULA ── */
+  .formula-box {
+    background: rgba(0,255,247,0.04);
+    border: 1px solid rgba(0,255,247,0.12);
+    padding: 32px;
+    margin: 40px 0;
+    text-align: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    line-height: 2;
+    letter-spacing: 0.05em;
+  }
+  .formula-box .fml {
+    font-size: clamp(13px, 2.5vw, 18px);
+    color: var(--yon-cyan);
+  }
+  .formula-box .fml-sub {
+    font-size: 10px;
+    color: rgba(247,245,240,0.3);
+    margin-top: 12px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 80px 0 60px;
+    border-top: 1px solid rgba(255,255,255,0.04);
+    text-align: center;
+  }
+  .footer-yon {
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-weight: 900;
+    font-size: 80px;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    margin-bottom: 24px;
+  }
+  .footer-yon .y { color: var(--yon-cyan); }
+  .footer-yon .o { color: var(--yon-magenta); }
+  .footer-yon .n { color: var(--yon-lime); }
+
+  .footer-links {
+    display: flex; gap: 32px; justify-content: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    margin-bottom: 40px;
+  }
+  .footer-links a {
+    color: rgba(247,245,240,0.35);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--yon-cyan); }
+
+  .footer-disclaimer {
+    font-size: 10px;
+    color: rgba(247,245,240,0.15);
+    line-height: 1.8;
+    max-width: 540px;
+    margin: 0 auto;
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* ── SCROLL INDICATOR ── */
+  .scroll-hint {
+    position: absolute;
+    bottom: 40px; left: 0;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    color: rgba(247,245,240,0.2);
+    display: flex; align-items: center; gap: 12px;
+    animation: fadeUp 1s 1.5s both;
+  }
+  .scroll-hint::before {
+    content: '';
+    display: block;
+    width: 1px; height: 40px;
+    background: linear-gradient(to bottom, transparent, rgba(247,245,240,0.2));
+  }
+
+  /* ── HIGHLIGHT LINE ── */
+  .hl { position: relative; display: inline; }
+  .hl::after {
+    content: '';
+    position: absolute;
+    bottom: -2px; left: 0;
+    width: 100%; height: 2px;
+    background: var(--yon-cyan);
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── GLITCH ── */
+  .glitch {
+    position: relative;
+  }
+  .glitch:hover::before, .glitch:hover::after {
+    content: attr(data-text);
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%;
+  }
+  .glitch:hover::before {
+    color: var(--yon-cyan);
+    animation: glitch1 0.3s ease-in-out infinite;
+    clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+  }
+  .glitch:hover::after {
+    color: var(--yon-magenta);
+    animation: glitch2 0.3s ease-in-out infinite;
+    clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+  }
+  @keyframes glitch1 {
+    0%, 100% { transform: translate(0); }
+    50% { transform: translate(-3px, 1px); }
+  }
+  @keyframes glitch2 {
+    0%, 100% { transform: translate(0); }
+    50% { transform: translate(3px, -1px); }
+  }
+
+  /* ── CURSOR DOT ── */
+  .cursor-dot {
+    width: 6px; height: 6px;
+    background: var(--yon-cyan);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.1s ease;
+    box-shadow: 0 0 10px var(--yon-cyan);
+  }
+
+  /* ── QUANTUM BADGE ── */
+  .q-badge {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    padding: 4px 10px;
+    border: 1px solid;
+    vertical-align: middle;
+    margin: 0 4px;
+  }
+  .q-badge-c { border-color: var(--yon-cyan); color: var(--yon-cyan); }
+  .q-badge-m { border-color: var(--yon-magenta); color: var(--yon-magenta); }
+  .q-badge-l { border-color: var(--yon-lime); color: var(--yon-lime); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    main { padding: 0 32px; }
+    .nft-row { grid-template-columns: repeat(2, 1fr); }
+    .team-grid { grid-template-columns: repeat(2, 1fr); }
+    .token-grid { grid-template-columns: 1fr; }
+    .dna-rail { display: none; }
+    main { padding: 0 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor-dot" id="cursor"></div>
+
+<canvas id="fractal-bg"></canvas>
+
+<!-- DNA RAILS -->
+<div class="dna-rail" id="dna-left">
+  <svg id="dna-svg-l" viewBox="0 0 24 800" preserveAspectRatio="none"></svg>
+</div>
+<div class="dna-rail dna-rail-right" id="dna-right">
+  <svg id="dna-svg-r" viewBox="0 0 24 800" preserveAspectRatio="none"></svg>
+</div>
+
+<main>
+
+  <!-- ═══ HERO ═══ -->
+  <section class="hero" style="opacity:1;transform:none;border:none;padding-top:0;">
+    <div class="hero-tag">YON TOKEN · WHITEPAPER v∞ · TON BLOCKCHAIN · ДУХ ЖИЗНИ</div>
+
+    <div class="hero-logo glitch" data-text="YON">
+      <span class="y">Y</span><span class="o">O</span><span class="n">N</span>
+    </div>
+
+    <p class="hero-sub">
+      Токен для тех, кто умеет шить, парить и строить.<br>
+      И для тех, кто пока только думает об этом.<br>
+      Децентрализованный клуб живых людей на мёртвом блокчейне.<br>
+      <em>(Блокчейн живой. Это мы пошутили.)</em>
+    </p>
+
+    <div class="hero-divider"></div>
+
+    <div class="hero-meta">
+      SUPPLY: 1,000,000,000 YON &nbsp;·&nbsp; CHAIN: TON &nbsp;·&nbsp; DEX: STON.FI &nbsp;·&nbsp;
+      NFT: 6 GENESIS &nbsp;·&nbsp; КОМАНДА: 6 БОГОВ
+    </div>
+
+    <div class="scroll-hint">SCROLL</div>
+  </section>
+
+  <!-- ═══ 01. МАНИФЕСТ ═══ -->
+  <section>
+    <span class="sec-num">01 — МАНИФЕСТ</span>
+    <h2>Почему<br>YON существует</h2>
+
+    <p class="big-p">Потому что деньги — это скучно,<br>а <span class="acc-c">YON</span> — это весело.</p>
+
+    <p>В мире, где каждый второй выпускает токен для «революции финансов», мы выпускаем токен для людей, которые умеют делать что-то руками. Баня. Массаж. Платье. Стена из кирпича. Видео на YouTube. Это и есть настоящая экономика.</p>
+
+    <div class="joke">
+      <strong>Квантовое замечание:</strong> YON существует и не существует одновременно — до тех пор, пока вы не откроете ston.fi и не посмотрите на цену. Это не баг. Это Шрёдингер.
+    </div>
+
+    <p>Клуб <a href="https://t.me/duhzhizni" style="color:var(--yon-cyan);text-decoration:none;">t.me/duhzhizni</a> — это живое сообщество. Здесь можно получить массаж в обмен на консультацию по строительству, заплатить за курс токеном и обсудить ДНК фракталов в чате. Мы не знаем, куда это придёт. Именно поэтому интересно.</p>
+
+    <div class="joke joke-m">
+      <strong>Дисклеймер:</strong> Это не финансовый совет. Это духовный совет. Разница в том, что за духовный совет лицензия не нужна.
+    </div>
+  </section>
+
+  <!-- ═══ 02. ТОКЕНОМИКА ═══ -->
+  <section>
+    <span class="sec-num">02 — ТОКЕНОМИКА</span>
+    <h2>1 миллиард<br><span class="acc-l">монет</span></h2>
+
+    <p>Мы взяли круглое число, потому что оно красиво выглядит в презентациях. Математика токеномики проста: <span class="acc-c">чем меньше монет в обороте</span> — тем выше ценность. Поэтому мы их сжигаем. Регулярно. С удовольствием.</p>
+
+    <div class="token-grid">
+      <div class="token-cell tc-1">
+        <div class="tc-pct">40%</div>
+        <div class="tc-label">NFT ДРОПЫ</div>
+        <div class="tc-sub">400 000 000 YON</div>
+      </div>
+      <div class="token-cell tc-2">
+        <di
